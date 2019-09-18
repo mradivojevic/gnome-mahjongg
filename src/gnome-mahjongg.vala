@@ -26,6 +26,7 @@ public class Mahjongg : Gtk.Application
     private GameView game_view;
     private Gtk.Button pause_button;
     private Gtk.Label moves_label;
+    private Gtk.Label tiles_label;
     private Gtk.Label clock_label;
     private Gtk.Dialog? preferences_dialog = null;
 
@@ -93,6 +94,22 @@ public class Mahjongg : Gtk.Application
         group_box.pack_start (spacer, false, false, 0);
         moves_label = new Gtk.Label ("");
         group_box.pack_start (moves_label, false, false, 0);
+
+        var spacer3 = new Gtk.Label (" ");
+        group_box.pack_start (spacer3, false, false, 0);
+
+        var llabel = new Gtk.Label(_("/ Tiles Left:"));
+        group_box.pack_start (llabel, false, false, 0);
+
+        var spacer2 = new Gtk.Label (" ");
+        group_box.pack_start (spacer2, false, false, 0);
+
+        tiles_label = new Gtk.Label("0");
+        group_box.pack_start (tiles_label, false, false, 0);
+
+        var spacer4 = new Gtk.Label (" ");
+        group_box.pack_start (spacer4, false, false, 0);
+
         status_box.pack_start (group_box, false, false, 0);
 
         clock_label = new Gtk.Label ("");
@@ -248,6 +265,7 @@ public class Mahjongg : Gtk.Application
         }
 
         moves_label.set_text ("%2u".printf (game_view.game.moves_left));
+        tiles_label.set_text ("%2u".printf (game_view.game.visible_tiles));
     }
 
     private void theme_changed_cb (Gtk.ComboBox widget)
@@ -323,7 +341,8 @@ public class Mahjongg : Gtk.Application
         UNDO,
         SHUFFLE,
         RESTART,
-        NEW_GAME
+        NEW_GAME,
+        QUIT
     }
 
     private void moved_cb ()
@@ -356,8 +375,9 @@ public class Mahjongg : Gtk.Application
                                                            allow_shuffle ? _("You can also try to reshuffle the game, but this does not guarantee a solution.") : ""));
             dialog.add_buttons (_("_Undo"), NoMovesDialogResponse.UNDO,
                                 _("_Restart"), NoMovesDialogResponse.RESTART,
-                                _("_New game"), NoMovesDialogResponse.NEW_GAME,
-                                allow_shuffle ? _("_Shuffle") : null, NoMovesDialogResponse.SHUFFLE);
+                                _("_New game"), NoMovesDialogResponse.NEW_GAME,                                
+                                allow_shuffle ? _("_Shuffle") : null, NoMovesDialogResponse.SHUFFLE,
+                                _("_Quit"), NoMovesDialogResponse.QUIT);
 
             var result = dialog.run ();
             /* Shuffling may cause the dialog to appear again immediately,
@@ -378,6 +398,9 @@ public class Mahjongg : Gtk.Application
             case NoMovesDialogResponse.NEW_GAME:
                 new_game ();
                 break;
+            case NoMovesDialogResponse.QUIT:
+                quit_cb ();
+                break;    
             case Gtk.ResponseType.DELETE_EVENT:
                 break;
             default:
@@ -568,6 +591,7 @@ public class Mahjongg : Gtk.Application
             "Philippe Chavin",
             "Callum McKenzie",
             "Robert Ancell",
+            "Milos Radivojevic",
             "",
             _("Maps:"),
             "Rexford Newbould",

@@ -1,9 +1,4 @@
-The Mahjongg Map Tool makes it easy to generate new layouts for GNOME Mahjongg.
+Make small changes to the game:
 
-https://github.com/logicplace/mggmap
-
-===
-
-Sources for the Smooth tile set are available on GitHub:
-
-https://github.com/jimevins/smooth-tileset
+- Add a quit button at the end game dialog
+- Add a tile count at the top of the screen
